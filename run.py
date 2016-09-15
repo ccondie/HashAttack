@@ -1,22 +1,28 @@
 import hashlib
 
 
-def main():
-    hasher = hashlib.sha1()
-    hasher.update(b'cat')
-
-    digest = hasher.hexdigest()
-    digest_size = hasher.digest_size
-
-    print(digest_size)
-    print(digest)
+def sha1_wrapper(input, bit_len):
+    """
+    :param input: string to hash with sha1
+    :param bit_len: 1-160
+    :return: sha1 hash of input truncated down to a sub_string of [0:bit_len]
+    """
+    h = hashlib.sha1()
+    h.update(input.encode())
+    digest = h.hexdigest()
 
     bin_digest_array = []
     for el in digest:
-        bin_digest_array.append(format(int(el,16),'04b'))
+        bin_digest_array.append(format(int(el, 16), '04b'))
 
     bin_digest = ''.join(bin_digest_array)
-    print(bin_digest)
+    short_digest = bin_digest[0:bit_len]
+
+    return short_digest
+
+
+def main():
+    pass
 
 
 main()
