@@ -82,45 +82,49 @@ def pre_image_attack(match_hash_str, hash_len, word_len):
 
 
 def main():
+    output_file = 'output.csv'
+    sample_size = 50
+    word_size = 30
+
     test_bit_length = 0
     while True:
-        with open('output.txt', 'a') as file:
-            file.write('pre_image_attack: ' + str(test_bit_length) + 'bits\n')
+        with open(output_file, 'a') as file:
+            for j in range(0, sample_size):
+                file.write(',' + str(test_bit_length))
+            file.write('\n')
 
-        # run the pre_image attack X times for the current bit_length
-        pre_image_results = []
-        for i in range(0, 50):
-            word = random_word(30)
-            pre_image_results.append(pre_image_attack(word, test_bit_length, 30))
-        # write the results, times first then word counts
-        with open('output.txt', 'a') as file:
+            # run the pre_image attack X times for the current bit_length
+            pre_image_results = []
+            file.write(str(test_bit_length) + 'bits re_image_attack_time,')
+            for i in range(0, sample_size):
+                word = random_word(word_size)
+                pre_image_results.append(pre_image_attack(word, test_bit_length, word_size))
+
+            # write the results, times first then word counts
             for x in range(0, len(pre_image_results)):
-                file.write(',' + str(pre_image_results[x][0]))
-            file.write('\n')
+                file.write(str(pre_image_results[x][0]) + ',')
+            file.write('\n' + str(test_bit_length) + 'bits pre_image_attack_words,')
             for y in range(0, len(pre_image_results)):
-                file.write(',' + str(pre_image_results[y][1]))
+                file.write(str(pre_image_results[y][1]) + ',')
 
-        with open('output.txt', 'a') as file:
-            file.write('\ncollision_attack: ' + str(test_bit_length) + 'bits\n')
-
-        # run the collision attack X times for the current bit_length
-        collision_attack_results = []
-        for j in range(0, 50):
-            collision_attack_results.append(collision_attack(test_bit_length, 30))
-        # write the results, times first then word counts
-        with open('output.txt', 'a') as file:
-            for x in range(0, len(collision_attack_results)):
-                file.write(',' + str(collision_attack_results[x][0]))
             file.write('\n')
+
+            # run the collision attack X times for the current bit_length
+            file.write(str(test_bit_length) + 'bits collision_attack_time,')
+            collision_attack_results = []
+            for j in range(0, sample_size):
+                collision_attack_results.append(collision_attack(test_bit_length, word_size))
+
+            # write the results, times first then word counts
+            for x in range(0, len(collision_attack_results)):
+                file.write(str(collision_attack_results[x][0]) + ',')
+            file.write('\n' + str(test_bit_length) + 'bits collision_attack_words,')
             for y in range(0, len(collision_attack_results)):
-                file.write(',' + str(collision_attack_results[y][1]))
+                file.write(str(collision_attack_results[y][1]) + ',')
 
-        with open('output.txt', 'a') as file:
-            file.write('\n\n')
-            file.write('---------------------------------------------------------------------------------------')
             file.write('\n\n')
 
-        test_bit_length += 1
+            test_bit_length += 1
 
 
 main()
